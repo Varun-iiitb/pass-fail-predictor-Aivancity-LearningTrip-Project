@@ -1,77 +1,84 @@
-# pass-fail-predictor
+# Pass–Fail Predictor
 
-This project builds a machine learning pipeline to classify students into performance categories (`GradeClass`) based on various features such as study time, extracurricular activities, and parental background.
+This project implements a complete machine learning pipeline to classify students into performance categories (`GradeClass`) using academic, behavioral, and demographic features.
 
 ## Overview
 
-* **Dataset**: `Student_performance.csv`
-* **Goal**: Predict the `GradeClass` of students
-* **Approach**:
+- **Dataset:** `Student_performance.csv`
+- **Objective:** Predict the `GradeClass` of students
+- **Key Components:**
+  - Outlier handling and categorical encoding
+  - Class balancing with SMOTE
+  - Feature selection using Random Forest importances
+  - Weighted soft-voting ensemble model
+  - Probability calibration
+  - Class-wise threshold tuning for improved F1-score
 
-  * Handle outliers and encode categorical variables
-  * Use SMOTE for class balancing
-  * Feature selection using Random Forest
-  * Train a soft-voting ensemble model
-  * Calibrate prediction probabilities
-  * Tune class-wise thresholds for improved F1 score
+---
 
 ## Models Used
 
-* Logistic Regression (with Standard Scaling)
-* Decision Tree
-* Random Forest
-* XGBoost
+The classification system uses the following models:
 
-Combined using a weighted soft-voting ensemble classifier.
+- Logistic Regression (with Standard Scaling)
+- Decision Tree
+- Random Forest
+- XGBoost
+
+These models are combined using a **weighted soft-voting ensemble classifier**.
+
+---
 
 ## Pipeline Steps
 
-1. **Preprocessing**:
+### 1. **Preprocessing**
+- Cap outliers in `StudyTimeWeekly` and `Absences`
+- Frequency-encode categorical variables
+- Remove original categorical columns after encoding
 
-   * Cap outliers in `StudyTimeWeekly` and `Absences`
-   * Frequency-encode categorical features
-   * Drop original categorical columns
+### 2. **Train–Test Split**
+- Split the data (80–20) with stratification to maintain class balance
 
-2. **Split**:
+### 3. **Class Balancing**
+- Apply **SMOTE** to oversample minority classes in the training set
 
-   * Train-test split (80-20) with stratification
+### 4. **Feature Selection**
+- Use Random Forest feature importances  
+- Select features above the **median importance threshold**
 
-3. **Balancing**:
+### 5. **Model Training**
+- Train individual models
+- Build a **weighted soft-voting ensemble** for final predictions
 
-   * Apply SMOTE to training data
+### 6. **Probability Calibration**
+- Apply **isotonic regression** using 5-fold cross-validation  
+- Improves reliability of predicted probabilities
 
-4. **Feature Selection**:
+### 7. **Threshold Optimization**
+- Tune decision thresholds **for each class** using a validation set  
+- Enhances F1-score and performance balance
 
-   * Select features using Random Forest (median importance threshold)
+### 8. **Final Prediction**
+- Predict using calibrated probabilities + optimized thresholds
 
-5. **Training**:
+### 9. **Evaluation**
+- Accuracy
+- Classification report
+- Confusion matrix
 
-   * Train individual classifiers
-   * Build soft-voting ensemble
+### 10. **Visualization**
+Includes:
+- Class distribution plot
+- Feature importances
+- Confusion matrix heatmap
+- Correlation analysis of selected features
+- Category-wise feature breakdown across grade classes
 
-6. **Calibration**:
-
-   * Apply isotonic calibration with 5-fold CV
-
-7. **Threshold Tuning**:
-
-   * Tune per-class thresholds using validation set
-
-8. **Prediction**:
-
-   * Use optimized thresholds for final predictions
-
-9. **Evaluation**:
-
-   * Accuracy, classification report, confusion matrix
-
-10. **Visualization**:
-
-    * Class distribution, feature importances, confusion matrix
-    * Correlation analysis of selected features
-    * Percentage distribution of categorical features by grade class
+---
 
 ## Dependencies
+
+Install all required libraries using:
 
 ```bash
 pip install pandas numpy scikit-learn xgboost imbalanced-learn matplotlib shap
@@ -98,4 +105,8 @@ python student_performance_classifier.py
 
 ## Author
 
-Developed by Varun Ekambaranath, Shivansh shah, adithya kommuri and tejas kollipara for student analytics and educational outcome prediction.
+Developed by Adithya Kommuri, Shivansh Shah, Tejas Kollipara, Varun Ekambaranath
+
+for student analytics and educational outcome prediction.
+
+
